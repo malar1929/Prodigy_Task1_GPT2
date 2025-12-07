@@ -2,9 +2,9 @@
 # Prodigy InfoTech Internship - Task 1
 ## Text Generation using GPT-2
 
-**Name:** [ACTUAL NAME PODU DA]  # 💡 CHANGE THIS!
-**College:** [COLLEGE NAME]
-**Internship ID:** [PRODIGY ID]
+**Name:**SELVA MALAR S
+**College:** National Engineering Collage Kovilpatti
+**Internship ID:**  PIT/DEC25/01414
 **Date:** 02/01/2024
 
 ## 📌 Overview
