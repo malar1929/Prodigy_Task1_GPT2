@@ -1,0 +1,100 @@
+import pandas as pd
+df_multiple_prompts = pd.read_csv('multiple_prompts.csv')
+display(df_multiple_prompts)
+
+!pip install transformers --quiet
+import csv
+from transformers import AutoTokenizer, AutoModelForCausalLM
+print("✅ Libraries imported successfully!")
+try:
+    print("🔄 Loading GPT-2 model and tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    model = AutoModelForCausalLM.from_pretrained("gpt2")
+    print("✅ Model loaded successfully!")
+except Exception as e:
+    print(f"❌ Error loading model: {e}")
+prompt = "Artificial Intelligence is"
+print(f"\n📝 Prompt: {prompt}")
+inputs = tokenizer(prompt, return_tensors="pt")
+outputs = model.generate(
+    **inputs,
+    max_new_tokens=100,
+    do_sample=True,
+    temperature=0.8,
+    top_p=0.95,
+    repetition_penalty=1.2,
+    pad_token_id=tokenizer.eos_token_id
+)
+generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+print(f"\n🤖 Generated Text:\n{generated_text}")
+prompts = [
+    "Artificial Intelligence is",
+    "The future of machine learning",
+    "In the world of deep learning",
+    "Natural Language Processing can"
+]
+
+all_results = []
+for p in prompts:
+    print(f"\n{'='*50}")
+    print(f"Prompt: {p}")
+    inputs = tokenizer(p, return_tensors="pt")
+    outputs = model.generate(**inputs, max_new_tokens=80, do_sample=True)
+    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    print(f"Generated: {text}")
+    all_results.append([p, text])
+with open("multiple_prompts.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+    writer.writerow(["Prompt", "Generated Text"])
+    writer.writerows(all_results)
+print("\n✅ All results saved to 'multiple_prompts.csv'")
+html_content = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GPT-2 Text Generation Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; border-bottom: 3px solid #4CAF50; padding-bottom: 10px; }
+        .prompt { background: #e8f5e9; padding: 15px; border-left: 5px solid #4CAF50; margin: 20px 0; }
+        .output { background: #e3f2fd; padding: 15px; border-left: 5px solid #2196F3; }
+        .footer { margin-top: 30px; color: #666; font-size: 0.9em; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 GPT-2 Text Generation Task</h1>
+        <p><strong>Internship:</strong> Prodigy InfoTech</p>
+        <p><strong>Task:</strong> Text Generation using GPT-2</p>
+        
+        <h2>📝 Original Prompt</h2>
+        <div class="prompt">
+            <strong>Prompt:</strong> ''' + prompt + '''
+        </div>
+        
+        <h2>🤖 Generated Output</h2>
+        <div class="output">
+            ''' + generated_text.replace('\n', '<br>') + '''
+        </div>
+        
+        <div class="footer">
+            Generated using Hugging Face Transformers | GPT-2 Model
+        </div>
+    </div>
+</body>
+</html>
+'''
+with open("improved_output.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("✅ Improved HTML file created!")
+
+!zip -r prodigy_task1_final.zip \
+    Prodigy_Task1_GPT2.ipynb \
+    README.md \
+    gpt2_output.csv \
+    multiple_prompts.csv \
+    improved_output.html \
+    output.html
+print("📦 Final zip created: 'prodigy_task1_final.zip'")
+print("Contains all improved files!")
